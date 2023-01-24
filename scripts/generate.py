@@ -30,10 +30,11 @@ for x in f.readlines():
     codes.append(c)
 
 prefix = """use phf::{phf_map, Map};
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::prelude::*;
 
 #[cfg(test)]
 mod tests {
-
     #[test]
     fn test_from_code() {
         let l = crate::from_code("Adlm");
@@ -59,6 +60,25 @@ mod tests {
     }
 }
 //https://unicode.org/iso15924/iso15924-codes.html
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct ScriptCode {
+    //English Name
+     name: &'static str,
+    //ISO number
+    pub numeric: i32,
+    //code
+    code: &'static str,
+    //alias
+    alias: &'static str,
+    //age
+     age: &'static str,
+    //date
+    date: &'static str,
+}
+
+#[cfg(not(target_arch = "wasm32"))]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub struct ScriptCode {
     //English Name
@@ -75,23 +95,58 @@ pub struct ScriptCode {
     pub date: &'static str,
 }
 
+#[cfg(target_arch = "wasm32")]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+impl ScriptCode {
+    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
+     #[wasm_bindgen(getter)]
+    pub fn name(&self) -> String {
+        self.name.into()
+    }
+    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
+     #[wasm_bindgen(getter)]
+    pub fn code(&self) -> String {
+        self.code.into()
+    }
+
+    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
+     #[wasm_bindgen(getter)]
+    pub fn alias(&self) -> String {
+        self.alias.into()
+    }
+
+    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
+     #[wasm_bindgen(getter)]
+    pub fn age(&self) -> String {
+        self.age.into()
+    }
+
+    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
+    #[wasm_bindgen(getter)]
+    pub fn date(&self) -> String {
+        self.date.into()
+    }
+}
+
+
 /// Returns the ScriptCode with the given Alpha4 code, if exists.
 /// #Sample
 /// ```
 /// let script = rust_iso15924::from_code("Adlm");
 /// assert_eq!(166, script.unwrap().numeric);
 /// ```
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub fn from_code(alpha4: &str) -> Option<ScriptCode> {
     let up = alpha4.to_lowercase();
     ALL_MAP.get(&up).cloned()
 }
-
 /// Returns the ScriptCode with the given numeric , if exists.
 // #Sample
 /// ```
 /// let script = rust_iso15924::from_numeric(439);
 /// assert_eq!("Afak", script.unwrap().code);
 /// ```
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub fn from_numeric(numeric: i32) -> Option<ScriptCode> {
     let k = format!("{:03}", numeric);
     NUMERIC_MAP.get(&k).cloned()
@@ -103,6 +158,7 @@ pub fn from_numeric(numeric: i32) -> Option<ScriptCode> {
 /// let script = rust_iso15924::from_numeric_str("439");
 /// assert_eq!("Afak", script.unwrap().code);
 /// ```
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub fn from_numeric_str(numeric: &str) -> Option<ScriptCode> {
     NUMERIC_MAP.get(numeric).cloned()
 }
