@@ -1,4 +1,4 @@
-# rust_iso/iso639
+# rust_iso/iso15924
 
 A rust crate providing ISO 15924 support.
 

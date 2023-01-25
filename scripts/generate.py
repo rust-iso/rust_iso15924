@@ -98,30 +98,25 @@ pub struct ScriptCode {
 #[cfg(target_arch = "wasm32")]
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 impl ScriptCode {
-    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
      #[wasm_bindgen(getter)]
     pub fn name(&self) -> String {
         self.name.into()
     }
-    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
      #[wasm_bindgen(getter)]
     pub fn code(&self) -> String {
         self.code.into()
     }
 
-    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
      #[wasm_bindgen(getter)]
     pub fn alias(&self) -> String {
         self.alias.into()
     }
 
-    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
      #[wasm_bindgen(getter)]
     pub fn age(&self) -> String {
         self.age.into()
     }
 
-    // #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
     #[wasm_bindgen(getter)]
     pub fn date(&self) -> String {
         self.date.into()
